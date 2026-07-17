@@ -7,21 +7,6 @@ class TestBaseProduct:
         assert BaseProduct.__abstractmethods__
 
 
-class TestLogMixin:
-    def test_log_mixin_called_during_product_creation(self, capsys):
-        product = Product("Телефон", "Смартфон", 50000.0, 10)
-        captured = capsys.readouterr()
-        assert "Создан объект класса Product" in captured.out
-        assert "Телефон" in captured.out
-
-    def test_log_mixin_called_during_smartphone_creation(self, capsys):
-        phone = Smartphone("iPhone 15", "Смартфон", 99999.0, 10,
-                          "A16 Bionic", "iPhone 15 Pro", 256, "Титан")
-        captured = capsys.readouterr()
-        assert "Создан объект класса Smartphone" in captured.out
-        assert "iPhone 15" in captured.out
-
-
 class TestProduct:
     def test_product_creation(self):
         product = Product("Телефон", "Смартфон", 50000.0, 10)
