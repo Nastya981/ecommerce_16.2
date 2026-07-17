@@ -29,19 +29,19 @@ class LogMixin:
 
     def __init__(self, *args, **kwargs) -> None:
         print(f"Создан объект класса {self.__class__.__name__} с параметрами: {args}, {kwargs}")
-        # Не вызываем super().__init__, чтобы избежать ошибки
+        # НЕ вызываем super().__init__(), чтобы избежать ошибки
 
 
-class Product(BaseProduct):
+class Product(BaseProduct, LogMixin):
     """Базовый класс для товара"""
 
     def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
+        # Вызываем LogMixin вручную
+        LogMixin.__init__(self, name, description, price, quantity)
         self.name = name
         self.description = description
         self.__price = price
         self.quantity = quantity
-        # Вызываем LogMixin вручную
-        LogMixin.__init__(self, name, description, price, quantity)
 
     def __str__(self) -> str:
         return f"{self.name}, {self.__price} руб. Остаток: {self.quantity} шт."
