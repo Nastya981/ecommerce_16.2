@@ -29,10 +29,10 @@ class LogMixin:
 
     def __init__(self, *args, **kwargs) -> None:
         print(f"Создан объект класса {self.__class__.__name__} с параметрами: {args}, {kwargs}")
-        # Не вызываем super().__init__, чтобы избежать ошибки
+        super().__init__(*args, **kwargs)
 
 
-class Product(BaseProduct):
+class Product(BaseProduct, LogMixin):
     """Базовый класс для товара"""
 
     def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
@@ -40,8 +40,6 @@ class Product(BaseProduct):
         self.description = description
         self.__price = price
         self.quantity = quantity
-        # Вызываем LogMixin вручную
-        LogMixin.__init__(self, name, description, price, quantity)
 
     def __str__(self) -> str:
         return f"{self.name}, {self.__price} руб. Остаток: {self.quantity} шт."
@@ -61,15 +59,6 @@ class Product(BaseProduct):
             print("Цена не должна быть нулевая или отрицательная")
         else:
             self.__price = new_price
-
-    @classmethod
-    def new_product(cls, product_data: dict) -> "Product":
-        return cls(
-            name=product_data.get("name", ""),
-            description=product_data.get("description", ""),
-            price=product_data.get("price", 0.0),
-            quantity=product_data.get("quantity", 0)
-        )
 
 
 class Smartphone(Product):
