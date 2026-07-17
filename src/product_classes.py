@@ -29,14 +29,16 @@ class LogMixin:
 
     def __init__(self, *args, **kwargs) -> None:
         print(f"Создан объект класса {self.__class__.__name__} с параметрами: {args}, {kwargs}")
-        # НЕ вызываем super().__init__(), чтобы избежать ошибки
 
 
 class Product(BaseProduct, LogMixin):
     """Базовый класс для товара"""
 
     def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
-        # Вызываем LogMixin вручную
+        # Проверка на нулевое количество
+        if quantity <= 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
+
         LogMixin.__init__(self, name, description, price, quantity)
         self.name = name
         self.description = description
@@ -122,3 +124,15 @@ class Category:
         for product in self.__products:
             result += str(product) + "\n"
         return result.rstrip("\n")
+
+    def average_price(self) -> float:
+        """
+        Подсчитывает средний ценник всех товаров в категории
+        Если товаров нет, возвращает 0
+        """
+        try:
+            total_price = sum(product.price for product in self.__products)
+            count = len(self.__products)
+            return total_price / count if count > 0 else 0
+        except ZeroDivisionError:
+            return 0
