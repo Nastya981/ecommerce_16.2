@@ -13,6 +13,14 @@ class TestProduct:
         assert product.name == "Телефон"
         assert product.price == 50000.0
 
+    def test_product_zero_quantity_raises_error(self):
+        with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+            Product("Телефон", "Смартфон", 50000.0, 0)
+
+    def test_product_negative_quantity_raises_error(self):
+        with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+            Product("Телефон", "Смартфон", 50000.0, -5)
+
     def test_product_is_instance_of_base(self):
         product = Product("Телефон", "Смартфон", 50000.0, 10)
         assert isinstance(product, BaseProduct)
@@ -37,6 +45,11 @@ class TestSmartphone:
         assert phone.model == "iPhone 15 Pro"
         assert phone.memory == 256
 
+    def test_smartphone_zero_quantity_raises_error(self):
+        with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+            Smartphone("iPhone", "Смартфон", 100.0, 0,
+                      "A16", "Pro", 256, "Титан")
+
 
 class TestLawnGrass:
     def test_lawn_grass_creation(self):
@@ -44,6 +57,11 @@ class TestLawnGrass:
                          "Россия", 7, "Зелёный")
         assert grass.country == "Россия"
         assert grass.germination_period == 7
+
+    def test_lawn_grass_zero_quantity_raises_error(self):
+        with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+            LawnGrass("Трава", "Для газона", 50.0, 0,
+                     "Россия", 7, "Зелёный")
 
 
 class TestAdd:
@@ -76,3 +94,13 @@ class TestCategory:
         category = Category("Электроника", "Электронные товары")
         with pytest.raises(TypeError, match="Можно добавлять только объекты Product"):
             category.add_product("not a product")
+
+    def test_category_average_price(self):
+        product1 = Product("Товар1", "Описание1", 100.0, 10)
+        product2 = Product("Товар2", "Описание2", 200.0, 5)
+        category = Category("Категория", "Описание", [product1, product2])
+        assert category.average_price() == 150.0
+
+    def test_category_average_price_empty(self):
+        category = Category("Категория", "Описание")
+        assert category.average_price() == 0.0
