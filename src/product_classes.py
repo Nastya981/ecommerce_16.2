@@ -64,15 +64,6 @@ class Product(BaseProduct, LogMixin):
         else:
             self.__price = new_price
 
-    @classmethod
-    def new_product(cls, product_data: dict) -> "Product":
-        return cls(
-            name=product_data.get("name", ""),
-            description=product_data.get("description", ""),
-            price=product_data.get("price", 0.0),
-            quantity=product_data.get("quantity", 0)
-        )
-
 
 class Smartphone(Product):
     """Класс для смартфона (наследник Product)"""
